@@ -9,27 +9,25 @@ import checkinsRoutes from "./routes/checkins";
 
 const app = express();
 
-// ✅ Permitir frontend de Render y localhost (ambos)
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://petroarte-frontend.onrender.com", // <--- cambia esto si tu frontend tiene otro dominio
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// ✅ Configuración CORS correcta (con credenciales)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // o tu dominio de frontend si lo subes
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
 
 app.use(express.json());
 
-// 🔗 Rutas
+// ✅ Rutas API
 app.use("/api/empleados", empleadosRoutes);
 app.use("/api/prestamos", prestamosRoutes);
 app.use("/api/nominas", nominasRoutes);
 app.use("/api/checkins", checkinsRoutes);
 
-// 🧩 Conexión Mongo
+// ✅ Conexión MongoDB
 mongoose
   .connect(MONGO_URI)
   .then(() => {
