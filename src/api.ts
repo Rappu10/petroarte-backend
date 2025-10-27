@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:4000/api"; 
+// 🌍 URL base del backend
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://petroarte-backend-1.onrender.com/api";
 
 // 🔹 Obtener lista de empleados
 export async function getEmpleados() {
@@ -54,14 +56,13 @@ export async function createPrestamo(data: any) {
   return res.json();
 }
 
-// 🔹 Eliminar nómina
-export async function deleteNomina(id: string) {
-  const res = await fetch(`${API_URL}/nominas/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Error al eliminar nómina");
+// 🔹 Nóminas
+export async function getNominas() {
+  const res = await fetch(`${API_URL}/nominas`);
+  if (!res.ok) throw new Error("Error al obtener nóminas");
   return res.json();
 }
 
-// 🔹 Guardar nómina (una fila individual)
 export async function createNomina(data: any) {
   const res = await fetch(`${API_URL}/nominas`, {
     method: "POST",
@@ -72,25 +73,12 @@ export async function createNomina(data: any) {
   return res.json();
 }
 
-// 🔹 Obtener todas las nóminas
-export async function getNominas() {
-  const res = await fetch(`${API_URL}/nominas`);
-  if (!res.ok) throw new Error("Error al obtener nóminas");
-  return res.json();
-}
-// 🔹 Obtener todos los check-ins
-export async function getCheckins() {
-  const res = await fetch(`${API_URL}/checkins`);
-  if (!res.ok) throw new Error("Error al obtener check-ins");
-  return res.json();
-}
-
-// 🔹 Crear varios check-ins (por día o semana)
-export async function createCheckins(registros: any[]) {
+// 🔹 Check-ins
+export async function createCheckins(data: any) {
   const res = await fetch(`${API_URL}/checkins`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ registros }),
+    body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Error al guardar check-ins");
   return res.json();
