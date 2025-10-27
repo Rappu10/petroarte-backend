@@ -1,7 +1,6 @@
-// ✅ Configuración CORS global
-import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import { MONGO_URI, PORT } from "./config";
 import empleadosRoutes from "./routes/empleados";
 import prestamosRoutes from "./routes/prestamos";
@@ -10,10 +9,13 @@ import checkinsRoutes from "./routes/checkins";
 
 const app = express();
 
-// 🌐 CORS abierto para todo (permite localhost y tu dominio)
+// ✅ Permitir frontend de Render y localhost (ambos)
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "http://localhost:5173",
+      "https://petroarte-frontend.onrender.com", // <--- cambia esto si tu frontend tiene otro dominio
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -21,13 +23,13 @@ app.use(
 
 app.use(express.json());
 
-// 🔗 Rutas API
+// 🔗 Rutas
 app.use("/api/empleados", empleadosRoutes);
 app.use("/api/prestamos", prestamosRoutes);
 app.use("/api/nominas", nominasRoutes);
 app.use("/api/checkins", checkinsRoutes);
 
-// 🔌 Conexión a MongoDB Atlas
+// 🧩 Conexión Mongo
 mongoose
   .connect(MONGO_URI)
   .then(() => {
