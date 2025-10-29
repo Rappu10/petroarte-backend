@@ -14,9 +14,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://tusitio.hostingerapp.com", // ✅ tu dominio de Hostinger
-      "https://tusitio.vercel.app", // ✅ si también usas Vercel
-      "https://tusitio.com", // ✅ tu dominio final si lo tienes
+      "https://nominas-petroarte.vercel.app/", // ✅ si también usas Vercel
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
