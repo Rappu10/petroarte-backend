@@ -10,14 +10,19 @@ import checkinsRoutes from "./routes/checkins";
 const app = express();
 
 // ✅ Configuración CORS correcta (con credenciales)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // o tu dominio de frontend si lo subes
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
-});
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://tusitio.hostingerapp.com", // ✅ tu dominio de Hostinger
+      "https://tusitio.vercel.app", // ✅ si también usas Vercel
+      "https://tusitio.com", // ✅ tu dominio final si lo tienes
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
