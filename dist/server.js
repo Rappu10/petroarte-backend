@@ -12,12 +12,21 @@ const prestamos_1 = __importDefault(require("./routes/prestamos"));
 const nominas_1 = __importDefault(require("./routes/nominas"));
 const checkins_1 = __importDefault(require("./routes/checkins"));
 const app = (0, express_1.default)();
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ??
+    "http://localhost:5173,https://nominas-petroarte.vercel.app")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 // ✅ CONFIGURACIÓN CORS
 app.use((0, cors_1.default)({
-    origin: [
-        "http://localhost:5173", // desarrollo local
-        "https://nominas-petroarte.vercel.app", // dominio vercel
-    ],
+    origin: (origin, callback) => {
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+            return callback(null, true);
+        }
+        // Permitir herramientas como Postman (sin origin) y logging para diagnósticos
+        console.warn(`[CORS] Bloqueado origen no permitido: ${origin}`);
+        return callback(new Error("Origen no permitido por CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // 👈 importante para evitar el error
